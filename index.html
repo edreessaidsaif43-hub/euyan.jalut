@@ -1,0 +1,1683 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="true">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1e3a5f">
+  <meta name="description" content="منصة تعليمية متكاملة للتعلم التفاعلي">
+  <title>🎓 منصة تعليمية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #ffffff;
+      min-height: 100%;
+      color: #2d3748;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      border: 2px solid #667eea;
+    }
+    
+    h1 {
+      margin: 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: clamp(24px, 4vw, 32px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.4;
+    }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      margin-bottom: 25px;
+      border: 2px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+    
+    #m {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #48bb78, #38a169);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 50px;
+      box-shadow: 0 10px 30px rgba(72, 187, 120, 0.3);
+      z-index: 1000;
+      font-weight: 600;
+      display: none;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    #progressOverlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.28);
+      z-index: 12000;
+      backdrop-filter: blur(2px);
+    }
+
+    #progressOverlay.show {
+      display: flex;
+    }
+
+    #progressCard {
+      background: #ffffff;
+      border: 1px solid #dbe3ee;
+      border-radius: 14px;
+      min-width: 240px;
+      max-width: 300px;
+      padding: 16px 14px;
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.18);
+      text-align: center;
+    }
+
+    #progressTitle {
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    #progressPercent {
+      color: #1d4ed8;
+      font-weight: 800;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    #progressBar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      overflow: hidden;
+    }
+
+    #progressBarFill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #0ea5e9);
+      transition: width .16s ease;
+    }
+    
+    #m:not(:empty) {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+    
+    @keyframes slideDown {
+      from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 12px;
+      font-weight: 700;
+      color: #2d3748;
+      font-size: 16px;
+      letter-spacing: 0.3px;
+    }
+    
+    select, input[type="password"] {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid #e2e8f0;
+      border-radius: 15px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(5px);
+      font-family: inherit;
+    }
+    
+    select:focus, input[type="password"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      background: rgba(255, 255, 255, 1);
+      transform: translateY(-2px);
+    }
+    
+    #b {
+      margin-top: 30px;
+    }
+    
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .section-title::before {
+      content: "👧";
+      font-size: 24px;
+    }
+    
+    #l {
+      max-height: 450px;
+      overflow-y: auto;
+      margin-bottom: 25px;
+      border: 2px solid #e2e8f0;
+      border-radius: 15px;
+      padding: 15px;
+      background: rgba(248, 250, 252, 0.5);
+      backdrop-filter: blur(5px);
+    }
+    
+    #l::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    #l::-webkit-scrollbar-track {
+      background: rgba(226, 232, 240, 0.3);
+      border-radius: 10px;
+    }
+    
+    #l::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 10px;
+    }
+    
+    .student {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 25px;
+      margin-bottom: 15px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      backdrop-filter: blur(10px);
+    }
+    
+    .student:hover {
+      background: rgba(255, 255, 255, 1);
+      border-color: #667eea;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+    }
+    
+    .student.selected {
+      background: linear-gradient(135deg, rgba(245, 101, 101, 0.1), rgba(229, 62, 62, 0.1));
+      border-color: #f56565;
+      box-shadow: 0 8px 25px rgba(245, 101, 101, 0.25);
+    }
+    
+    .student.selected:hover {
+      background: linear-gradient(135deg, rgba(245, 101, 101, 0.2), rgba(229, 62, 62, 0.2));
+      border-color: #e53e3e;
+      transform: translateY(-3px) scale(1.02);
+    }
+    
+    .student b {
+      color: #2d3748;
+      font-size: clamp(16px, 2.5vw, 18px);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    
+    .student.selected b {
+      color: #c53030;
+    }
+    
+    .student-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .student-avatar {
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    
+    .student.selected .student-avatar {
+      background: linear-gradient(135deg, #f56565, #e53e3e);
+    }
+    
+    input[type="checkbox"] {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      accent-color: #f56565;
+      border-radius: 6px;
+    }
+    
+    button {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 18px 35px;
+      border-radius: 15px;
+      font-size: clamp(16px, 2.5vw, 18px);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-left: 10px;
+      margin-bottom: 10px;
+      min-height: 60px;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+      font-family: inherit;
+      letter-spacing: 0.5px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+      background: linear-gradient(135deg, #5568d3, #6b46c1);
+    }
+    
+    button:active {
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, #4a5cb8, #5c3aa1);
+    }
+    
+    button[type="button"] {
+      background: linear-gradient(135deg, #48bb78, #38a169);
+      box-shadow: 0 8px 20px rgba(72, 187, 120, 0.3);
+    }
+    
+    button[type="button"]:hover {
+      background: linear-gradient(135deg, #38a169, #2f855a);
+      box-shadow: 0 12px 30px rgba(72, 187, 120, 0.4);
+    }
+    
+    button[type="button"]:active {
+      background: linear-gradient(135deg, #2f855a, #276749);
+    }
+    
+    button[type="button"]:nth-of-type(2) {
+      background: linear-gradient(135deg, #f56565, #e53e3e);
+      box-shadow: 0 8px 20px rgba(245, 101, 101, 0.3);
+    }
+    
+    button[type="button"]:nth-of-type(2):hover {
+      background: linear-gradient(135deg, #e53e3e, #c53030);
+      box-shadow: 0 12px 30px rgba(245, 101, 101, 0.4);
+    }
+    
+    button[type="button"]:nth-of-type(2):active {
+      background: linear-gradient(135deg, #c53030, #9b2c2c);
+    }
+    
+    hr {
+      border: none;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #667eea, transparent);
+      margin: 40px 0;
+      border-radius: 2px;
+    }
+    
+    #g, #q {
+      text-align: center;
+    }
+    
+    #g input {
+      max-width: 350px;
+      margin: 0 auto 20px;
+      display: block;
+    }
+    
+    #am {
+      margin-top: 15px;
+      font-size: 28px;
+      min-height: 35px;
+    }
+    
+    #r {
+      background: rgba(247, 250, 252, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 25px;
+      border-radius: 15px;
+      margin-top: 25px;
+      text-align: right;
+      line-height: 1.8;
+      min-height: 120px;
+      border: 1px solid rgba(226, 232, 240, 0.5);
+    }
+    
+    #r a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 0 8px;
+      padding: 8px 15px;
+      background: rgba(237, 242, 247, 0.8);
+      border-radius: 25px;
+      display: inline-block;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+    
+    #r a:hover {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .button-group button {
+      margin: 0;
+      width: 100%;
+    }
+    
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .student-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    @media (max-width: 768px) {
+      .container { padding: 15px; }
+      .header { padding: 30px 20px; margin-bottom: 20px; }
+      .card { padding: 20px; margin-bottom: 20px; }
+      .student { padding: 15px 20px; margin-bottom: 12px; }
+      .student-info { gap: 12px; }
+      .student-avatar { width: 40px; height: 40px; font-size: 16px; }
+      .button-group { grid-template-columns: 1fr; gap: 12px; }
+      button { padding: 16px 25px; min-height: 55px; margin-left: 0; width: 100%; font-size: 16px; }
+      #l { max-height: 350px; padding: 12px; }
+      select, input[type="password"] { padding: 14px 18px; font-size: 16px; }
+      #g button { width: 100%; margin: 0; padding: 16px 25px; }
+    }
+  </style>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --text: #1f2937;
+      --muted: #64748b;
+      --primary: #3b82f6;
+      --primary-soft: #dbeafe;
+      --border: #dbe3ee;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+    }
+
+    body {
+      background: radial-gradient(circle at top, #f8fbff 0%, var(--bg) 55%) !important;
+      color: var(--text) !important;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .header,
+    .card {
+      background: var(--surface) !important;
+      border: 1px solid var(--border) !important;
+      box-shadow: var(--shadow) !important;
+      border-radius: 16px !important;
+    }
+
+    .card:hover,
+    .student:hover,
+    button:hover {
+      transform: none !important;
+    }
+
+    h1 {
+      background: none !important;
+      -webkit-text-fill-color: initial !important;
+      color: #0f2f4f !important;
+      letter-spacing: 0 !important;
+    }
+
+    label {
+      color: #334155 !important;
+      font-weight: 700 !important;
+    }
+
+    select,
+    input[type="password"],
+    input[type="number"] {
+      background: var(--surface-2) !important;
+      border: 1px solid var(--border) !important;
+      color: var(--text) !important;
+      border-radius: 12px !important;
+      box-shadow: none !important;
+    }
+
+    select:focus,
+    input[type="password"]:focus,
+    input[type="number"]:focus {
+      border-color: #93c5fd !important;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+    }
+
+    #m {
+      background: #0f766e !important;
+      box-shadow: 0 8px 20px rgba(15, 118, 110, 0.22) !important;
+      border: 0 !important;
+    }
+
+    #l {
+      background: #f8fafc !important;
+      border: 1px solid var(--border) !important;
+    }
+
+    .student {
+      background: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06) !important;
+    }
+
+    .student.selected {
+      background: #fff7ed !important;
+      border-color: #fdba74 !important;
+      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.14) !important;
+    }
+
+    .student-avatar {
+      background: #475569 !important;
+    }
+
+    .student.selected .student-avatar {
+      background: #b45309 !important;
+    }
+
+    button {
+      background: #3b82f6 !important;
+      color: #fff !important;
+      border-radius: 12px !important;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2) !important;
+      min-height: 52px !important;
+    }
+
+    .button-group button:nth-child(1) { background: #16a34a !important; }
+    .button-group button:nth-child(2) { background: #dc2626 !important; }
+    .button-group button:nth-child(3) { background: #ea580c !important; }
+    .button-group button:nth-child(4) { background: #475569 !important; }
+
+    #g button,
+    #q button {
+      border-radius: 12px !important;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.14) !important;
+    }
+
+    hr {
+      height: 1px !important;
+      background: #dbe3ee !important;
+      margin: 28px 0 !important;
+    }
+
+    #r {
+      background: #f8fafc !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 12px !important;
+      color: var(--text) !important;
+    }
+
+    #r h2, #r h3 {
+      color: #1e293b !important;
+    }
+
+    #r [style*="background:linear-gradient"],
+    #r [style*="background:#"],
+    #r [style*="background:rgba"] {
+      background: #ffffff !important;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
+    }
+
+    #r a {
+      background: #e2e8f0 !important;
+      color: #0f172a !important;
+      border: 0 !important;
+      border-radius: 999px !important;
+      box-shadow: none !important;
+    }
+
+    #r a[href*="wa.me"] {
+      background: #dcfce7 !important;
+      color: #166534 !important;
+    }
+
+    #r a[href^="tel:"] {
+      background: #dbeafe !important;
+      color: #1d4ed8 !important;
+    }
+
+    #r .student-filter-btn {
+      min-height: auto !important;
+      padding: 6px 12px !important;
+      margin: 0 !important;
+      border-radius: 999px !important;
+      font-size: 12px !important;
+      box-shadow: none !important;
+    }
+
+    #l {
+      -webkit-overflow-scrolling: touch;
+      contain: layout paint;
+    }
+
+    .card,
+    #r,
+    .student,
+    .student-contact-card {
+      contain: layout paint style;
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      .card,
+      .student,
+      button,
+      #m,
+      select,
+      input {
+        transition: none !important;
+      }
+      .card:hover,
+      .student:hover,
+      button:hover {
+        transform: none !important;
+        box-shadow: inherit !important;
+      }
+    }
+
+    /* iPhone Safari performance fallback: تقليل المؤثرات الثقيلة */
+    @supports (-webkit-touch-callout: none) {
+      .header,
+      .card,
+      #m,
+      #l,
+      .student,
+      select,
+      input[type="password"],
+      input[type="date"],
+      input[type="number"] {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+      }
+      .header,
+      .card,
+      .student,
+      #r {
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
+      }
+      #m {
+        position: sticky !important;
+        top: 8px !important;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+      }
+      .header,
+      #g,
+      #f,
+      #m,
+      #q > div:first-child {
+        display: none !important;
+      }
+      #q,
+      #r,
+      .card {
+        display: block !important;
+        box-shadow: none !important;
+        border: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      #r {
+        background: #ffffff !important;
+      }
+      #r a {
+        color: #000 !important;
+        text-decoration: underline !important;
+        background: transparent !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="container">
+   <div class="header">
+    <h1>نظام إدارة الحضور والغياب المدرسي<br>
+      مدرسة عين جالوت للتعليم الاساسي</h1>
+   </div>
+   <div id="m"></div>
+   <div id="progressOverlay">
+    <div id="progressCard">
+      <div id="progressTitle">جاري التنفيذ</div>
+      <div id="progressPercent">0%</div>
+      <div id="progressBar"><div id="progressBarFill"></div></div>
+    </div>
+   </div>
+   <div class="card">
+    <form id="f"><label>الصف:</label> <select id="c" required> <option>جاري التحميل...</option> </select>
+     <label>الحصة:</label>
+     <select id="absenceType" required>
+      <option value="الحصة الأولى">الحصة الأولى</option>
+      <option value="الحصة الثانية">الحصة الثانية</option>
+      <option value="الحصة الثالثة">الحصة الثالثة</option>
+      <option value="الحصة الرابعة">الحصة الرابعة</option>
+      <option value="الحصة الخامسة">الحصة الخامسة</option>
+      <option value="الحصة السادسة">الحصة السادسة</option>
+      <option value="الحصة السابعة">الحصة السابعة</option>
+      <option value="الحصة الثامنة">الحصة الثامنة</option>
+     </select>
+     <div id="b" style="display:none">
+     <div class="section-title">
+       الطالبات:
+      </div>
+      <div id="l"></div>
+      <div class="button-group"><button type="button" onclick="A(0)">✅ الكل حاضر</button> <button type="button" onclick="A(1)">❌ الكل غائب</button> <button type="button" onclick="setRecordMode('absence')">❌ غائب</button> <button type="button" onclick="setRecordMode('dropout')">🚨 تسرب</button> <button>💾 حفظ</button>
+      </div>
+      <div id="recordModeHint" style="margin-top:10px;color:#64748b;font-size:14px;">وضع التسجيل: اختر غائب أو متسرب قبل الحفظ</div>
+     </div>
+    </form>
+   </div>
+   <hr>
+   <div class="card" id="g">
+    <div style="text-align: center; margin-bottom: 25px;">
+     <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);"><span style="font-size: 36px; color: white;">🔐</span>
+     </div>
+     <h3 style="margin: 0; color: #2d3748; font-size: 20px; font-weight: 700;">تسجيل الدخول</h3>
+     <p style="margin: 8px 0 0 0; color: #718096; font-size: 14px;">ادخل الرقم السري للوصول الى لوحة التحكم</p>
+    </div><label>الرقم السري:</label> <input id="p" type="password" placeholder="ادخل الرقم السري" style="margin-bottom: 20px;"> <button onclick="go();return false" style="width: 100%; background: linear-gradient(135deg, #4CAF50, #45a049); color: white; border: none; padding: 18px 35px; border-radius: 15px; font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4); display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0;"> <span style="font-size: 20px;">🚀</span> <span>دخول الى لوحة التحكم</span> </button>
+    <div id="am" style="margin-top: 20px; text-align: center;"></div>
+   </div>
+   <div class="card" id="q" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:15px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <label for="dateFrom" style="margin:0;font-size:13px;">من</label>
+        <input id="dateFrom" type="date" style="padding:8px 10px;border:1px solid #cbd5e1;border-radius:10px;min-width:150px;">
+        <label for="dateTo" style="margin:0;font-size:13px;">إلى</label>
+        <input id="dateTo" type="date" style="padding:8px 10px;border:1px solid #cbd5e1;border-radius:10px;min-width:150px;">
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <button onclick="abs(true)" style="background: linear-gradient(135deg, #17a2b8, #138496); color: white; border: none; padding: 15px 30px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">🔄 تحديث البيانات</button>
+        <button onclick="setDefaultDateRange();abs()" style="background:#475569;color:white;border:none;padding:15px 20px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">📅 يومي</button>
+        <button onclick="printReport()" style="background:#0f766e;color:white;border:none;padding:15px 20px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">🖨️ طباعة</button>
+        <button onclick="logout()" style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; border: none; padding: 15px 30px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">🚪 تسجيل الخروج</button>
+      </div>
+    </div>
+    <div id="r"></div>
+   </div>
+  </div>
+  <script>
+    const API="https://script.google.com/macros/s/AKfycbw3ofmY0_kXsH-aUKAzVZk5XC7ZdtmsxE9-Cpa-AKK2OeMeWCg1O9DGUPY19etkk82U/exec";
+    let S=[];
+    const $=id=>document.getElementById(id);
+    let recordMode='absence';
+    let modePicked=false;
+    const getTodayISO=()=>new Date().toISOString().slice(0,10);
+    const FAST_CACHE_MS=45000;
+    const fastCache={
+      attendance:{ts:0,data:null}
+    };
+    let latestPrintData=null;
+    let absRequestId=0;
+    const msg=t=>{
+      m.textContent=t;
+      setTimeout(()=>m.textContent='',2000)
+    };
+
+    const setProgress=(percent,label='جاري التنفيذ')=>{
+      const overlay=$('progressOverlay');
+      if(!overlay) return;
+      const p=Math.max(0,Math.min(100,Math.round(percent)));
+      $('progressTitle').textContent=label;
+      $('progressPercent').textContent=`${p}%`;
+      $('progressBarFill').style.width=`${p}%`;
+      overlay.classList.add('show');
+    };
+
+    const hideProgress=()=>{
+      const overlay=$('progressOverlay');
+      if(!overlay) return;
+      overlay.classList.remove('show');
+      $('progressBarFill').style.width='0%';
+      $('progressPercent').textContent='0%';
+      $('progressTitle').textContent='جاري التنفيذ';
+    };
+    
+    onload=async()=>{
+      await cls();
+      setDefaultDateRange();
+    };
+
+    function setDefaultDateRange(){
+      const today=getTodayISO();
+      if($('dateFrom')) $('dateFrom').value=today;
+      if($('dateTo')) $('dateTo').value=today;
+    }
+
+    function getSelectedDateRange(){
+      const today=getTodayISO();
+      const from=($('dateFrom')&&$('dateFrom').value)?$('dateFrom').value:today;
+      const to=($('dateTo')&&$('dateTo').value)?$('dateTo').value:today;
+      if(from<=to) return {from,to};
+      return {from:to,to:from};
+    }
+
+    function getContactLabel(action){
+      if(action==='both') return 'واتساب + اتصال';
+      if(action==='whatsapp') return 'واتساب';
+      if(action==='call') return 'اتصال';
+      return 'لم يتم';
+    }
+
+    function printReport(){
+      try{
+        if(!latestPrintData){
+          if(typeof setStudentFilter==='function') setStudentFilter('all');
+          setTimeout(()=>window.print(),120);
+          return;
+        }
+
+        const p=latestPrintData;
+        const summaryRows=[
+          ['إجمالي الصفوف',p.totals.totalClasses],
+          ['صفوف حضور كامل',p.totals.fullAttendance],
+          ['صفوف غياب كامل',p.totals.fullAbsence],
+          ['صفوف غياب جزئي',p.totals.partialAbsence],
+          ['صفوف بها تسرب',p.totals.dropoutClasses],
+          ['صفوف غير مسجلة',p.totals.notRecorded]
+        ].map(r=>`<tr><td>${escapeHtml(String(r[0]))}</td><td>${escapeHtml(String(r[1]))}</td></tr>`).join('');
+
+        const classTable=(title,rows)=>`
+          <h3>${escapeHtml(title)} (${rows.length})</h3>
+          <table>
+            <thead><tr><th>الصف</th><th>الحالة</th></tr></thead>
+            <tbody>
+              ${rows.length?rows.map(x=>{
+                const m=String(x).match(/^(.+?)\s*\((.+)\)$/);
+                const cls=m?m[1]:x;
+                const st=m?m[2]:'-';
+                return `<tr><td>${escapeHtml(cls)}</td><td>${escapeHtml(st)}</td></tr>`;
+              }).join(''):'<tr><td colspan="2">لا توجد بيانات</td></tr>'}
+            </tbody>
+          </table>
+        `;
+
+        const studentRows=(p.students||[]).map(s=>`
+          <tr>
+            <td>${escapeHtml(s.className)}</td>
+            <td>${escapeHtml(s.name)}</td>
+            <td>${escapeHtml(s.status)}</td>
+            <td>${escapeHtml(getContactLabel(s.contact))}</td>
+          </tr>
+        `).join('');
+
+        const html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>تقرير الطباعة</title>
+          <style>
+            body{font-family:Tahoma,Arial,sans-serif;padding:16px;color:#111;}
+            h1,h2,h3{margin:8px 0;}
+            .meta{margin:8px 0 14px 0;color:#334155}
+            table{width:100%;border-collapse:collapse;margin:8px 0 14px 0;}
+            th,td{border:1px solid #cbd5e1;padding:8px 10px;font-size:13px;text-align:right;vertical-align:top}
+            th{background:#f1f5f9}
+            .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+            .page-break{height:0}
+            @media print{body{padding:0} .grid{display:block} .page-break{break-before:page;page-break-before:always}}
+          </style></head><body>
+            <h1>تقرير الحضور والغياب</h1>
+            <div class="meta">${escapeHtml(p.rangeLabel)}</div>
+            <h2>ملخص عام</h2>
+            <table><thead><tr><th>البند</th><th>العدد</th></tr></thead><tbody>${summaryRows}</tbody></table>
+            <div class="grid">
+              <div>${classTable('الصفوف بحضور كامل',p.classes.fullAttendanceClasses||[])}</div>
+              <div>${classTable('الصفوف بغياب كامل',p.classes.fullAbsenceClasses||[])}</div>
+              <div>${classTable('الصفوف بغياب جزئي',p.classes.partialAbsenceClasses||[])}</div>
+              <div>${classTable('الصفوف التي بها تسرب',p.classes.dropoutClassesList||[])}</div>
+              <div>${classTable('الصفوف التي لم تدخل بياناتها',p.classes.notRecordedClasses||[])}</div>
+            </div>
+            <div class="page-break"></div>
+            <h2>الطالبات الغائبات أو المتسربات</h2>
+            <table>
+              <thead><tr><th>الصف</th><th>الطالبة</th><th>الحالة</th><th>التواصل</th></tr></thead>
+              <tbody>${studentRows||'<tr><td colspan="4">لا توجد بيانات</td></tr>'}</tbody>
+            </table>
+          </body></html>`;
+
+        const w=window.open('','_blank');
+        if(!w){
+          window.print();
+          return;
+        }
+        w.document.open();
+        w.document.write(html);
+        w.document.close();
+        setTimeout(()=>{w.focus();w.print();},200);
+      }catch(_){
+        window.print();
+      }
+    }
+    
+    async function cls(){
+      try{
+        const d=await (await fetch(API+'?type=students')).json();
+        const a=d.data||d;
+        S=a;
+        const u=[...new Set(a.filter(x=>x.class).map(x=>x.class.trim()))].sort(compareClasses);
+        c.innerHTML='<option value="">اختر الصف...</option>'+u.map(x=>'<option>'+x+'</option>').join('')
+      }catch(e){
+        c.innerHTML='<option>فشل التحميل</option>'
+      }
+    }
+    
+    c.onchange=()=>{
+      if(c.value){
+        modePicked=false;
+        recordMode='absence';
+        if($('recordModeHint')) $('recordModeHint').textContent='وضع التسجيل: اختر غائب أو متسرب قبل الحفظ';
+        st(c.value);
+        b.style.display='block'
+      }else b.style.display='none'
+    }
+    
+    async function st(n){
+      const u=S.filter(x=>x.class&&x.class.trim()==n&&x.student).map(x=>({s:x.student.trim(),ph:(x.phone||'').toString().replace(/\s+/g,'')}));
+      const k=[];
+      u.forEach(v=>{if(!k.find(z=>z.s==v.s))k.push(v)});
+      l.innerHTML=k.map((v,i)=>{
+        const id='s'+i;
+        const initials=v.s.split(' ').map(word=>word.charAt(0)).join('').substring(0,2);
+        return `<div class="student" data-s="${v.s}" data-phone="${v.ph}" onclick="tg('${id}')">
+          <div class="student-info">
+            <div class="student-avatar">${initials}</div>
+            <div><b>${v.s}</b></div>
+          </div>
+          <input id="${id}" type="checkbox" onclick="event.stopPropagation(); tg('${id}')">
+        </div>`
+      }).join('');
+      msg('تم التحميل - '+k.length+' طالبة')
+    }
+    
+    function tg(id){
+      const cb=$(id);
+      cb.checked=!cb.checked;
+      const studentDiv=cb.closest('.student');
+      if(cb.checked) studentDiv.classList.add('selected');
+      else studentDiv.classList.remove('selected');
+    }
+    
+    function A(abs){
+      document.querySelectorAll('#l input').forEach(e=>{
+        e.checked=!!abs;
+        const studentDiv=e.closest('.student');
+        if(abs) studentDiv.classList.add('selected');
+        else studentDiv.classList.remove('selected');
+      });
+      msg(abs?'الجميع غائب':'الجميع حاضر')
+    }
+
+    function setRecordMode(mode){
+      recordMode=mode;
+      modePicked=true;
+      if(mode==='dropout'){
+        if($('recordModeHint')) $('recordModeHint').textContent='وضع التسجيل: تسرب';
+        msg('تم اختيار وضع التسرب');
+      }else{
+        if($('recordModeHint')) $('recordModeHint').textContent='وضع التسجيل: غياب حسب الحصة المختارة';
+        msg('تم اختيار تسجيل الغياب للطالبات المحددات');
+      }
+    }
+
+    f.onsubmit=async e=>{
+      e.preventDefault();
+      if(!c.value) return msg('اختر الصف');
+      const absenceType=$('absenceType').value;
+      const selectedCount=document.querySelectorAll('.student input:checked').length;
+      let isDropout=recordMode==='dropout';
+      if(selectedCount>0 && !modePicked){
+        window.alert('يرجى اختيار زر "غائب" أو "متسرب" قبل الحفظ.');
+        msg('اختر غائب أو متسرب أولًا');
+        return;
+      }
+      const totalInClass=document.querySelectorAll('.student input').length;
+      const isFullClassAbsence=selectedCount>0 && selectedCount===totalInClass;
+      const studentStatus=isDropout?`متسربة - ${absenceType}`:`غائبة - ${absenceType}`;
+      const summaryStatus=isDropout
+        ?`${selectedCount} متسربة (${absenceType})`
+        :`${selectedCount} غائبة (${absenceType})`;
+      const a=[...document.querySelectorAll('.student')].filter(d=>d.querySelector('input').checked).map(d=>({
+        student:d.dataset.s,
+        class:c.value,
+        status:studentStatus
+      }));
+      const confirmText=
+        `تأكيد الحفظ\n\n`+
+        `الصف: ${c.value}\n`+
+        `الحالة: ${isDropout?'تسرب':absenceType}\n`+
+        `عدد الطالبات المحددات: ${selectedCount}\n\n`+
+        `هل تريد متابعة الحفظ؟`;
+      if(!window.confirm(confirmText)){
+        msg('تم إلغاء الحفظ');
+        return;
+      }
+      msg('جاري الحفظ...');
+      try{
+        const totalOps=1+a.length; // ملخص الصف + سجلات الطالبات
+        let doneOps=0;
+        setProgress(0,'جاري حفظ البيانات');
+        const summarySaved=await sv({student:'الصف '+c.value,class:c.value,status:a.length?summaryStatus:'حضور كامل'});
+        if(!summarySaved) throw new Error('summary save failed');
+        doneOps++;
+        setProgress(Math.round((doneOps/totalOps)*100),'جاري حفظ البيانات');
+
+        let failedSaves=0;
+        if(a.length){
+          const chunkSize=isFullClassAbsence?30:16;
+          for(let i=0;i<a.length;i+=chunkSize){
+            const chunk=a.slice(i,i+chunkSize);
+            failedSaves+=await saveChunkWithRetry(chunk);
+            doneOps+=chunk.length;
+            setProgress(Math.round((doneOps/totalOps)*100),'جاري حفظ البيانات');
+          }
+        }
+        setProgress(100,'اكتمل الحفظ');
+        setTimeout(hideProgress,260);
+
+        if(failedSaves===0){
+          msg(a.length?`✅ تم الحفظ بسرعة - ${a.length} (${isDropout?'تسرب':absenceType})`:'✅ تم الحفظ - حضور كامل');
+        }else{
+          msg(`⚠️ تم الحفظ مع تعذر ${failedSaves} سجل`);
+        }
+        fastCache.attendance={ts:0,data:null};
+        f.reset();
+        $('absenceType').value='الحصة الأولى';
+        recordMode='absence';
+        modePicked=false;
+        if($('recordModeHint')) $('recordModeHint').textContent='وضع التسجيل: اختر غائب أو متسرب قبل الحفظ';
+        b.style.display='none';
+        l.innerHTML='';
+      }catch(error){
+        hideProgress();
+        msg('❌ خطأ في الحفظ - حاول مرة أخرى');
+      }
+    }
+    
+    async function sv(o){
+      const q=new URLSearchParams(o);
+      q.append('action','save');
+      try{
+        return (await fetch(API+'?'+q,{cache:'no-store'})).ok
+      }catch(_){
+        return false
+      }
+    }
+
+    async function saveChunkWithRetry(chunk){
+      let failed=0;
+      const first=await Promise.allSettled(chunk.map(o=>sv(o)));
+      const retryList=[];
+      first.forEach((res,idx)=>{
+        if(res.status!=='fulfilled' || res.value!==true){
+          retryList.push(chunk[idx]);
+        }
+      });
+      if(retryList.length){
+        const second=await Promise.allSettled(retryList.map(o=>sv(o)));
+        failed+=second.filter(res=>res.status!=='fulfilled' || res.value!==true).length;
+      }
+      return failed;
+    }
+    
+    function go(){
+      if(p.value==='6869'){
+        g.style.display='none';
+        q.style.display='block';
+        setDefaultDateRange();
+        abs()
+      }else{
+        am.textContent='❌';
+        setTimeout(()=>am.textContent='',1500)
+      }
+    }
+    
+    function logout(){
+      p.value='';
+      g.style.display='block';
+      q.style.display='none';
+      r.innerHTML='';
+      msg('تم تسجيل الخروج بنجاح');
+    }
+
+    function normalizePhone(phone){
+      let ph=(phone||'').toString().replace(/\s+/g,'').replace(/\D/g,'');
+      if(ph.length===8 && !ph.startsWith('968')) ph='968'+ph;
+      return ph;
+    }
+
+    function escapeHtml(text){
+      return String(text||'')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+    }
+
+    function isDropoutStatus(status){
+      const s=String(status||'').trim();
+      return s.includes('متسرب') || s.includes('متسربة');
+    }
+
+    function getTodayContactStoreKey(){
+      const today=new Date().toISOString().slice(0,10);
+      return `student-contact-actions-${today}`;
+    }
+
+    function getContactAction(studentKey){
+      try{
+        const actions=JSON.parse(localStorage.getItem(getTodayContactStoreKey())||'{}');
+        const entry=actions[studentKey];
+        if(!entry) return null;
+        if(typeof entry==='string') return entry; // دعم القيم القديمة
+        const hasWhatsApp=!!entry.whatsapp;
+        const hasCall=!!entry.call;
+        if(hasWhatsApp && hasCall) return 'both';
+        if(hasWhatsApp) return 'whatsapp';
+        if(hasCall) return 'call';
+        return null;
+      }catch(_){
+        return null;
+      }
+    }
+
+    function markContact(studentKey,action){
+      let actions={};
+      try{
+        actions=JSON.parse(localStorage.getItem(getTodayContactStoreKey())||'{}');
+      }catch(_){
+        actions={};
+      }
+      const prev=actions[studentKey];
+      const next={
+        whatsapp: typeof prev==='object' ? !!prev.whatsapp : prev==='whatsapp',
+        call: typeof prev==='object' ? !!prev.call : prev==='call'
+      };
+      if(action==='whatsapp') next.whatsapp=true;
+      if(action==='call') next.call=true;
+      actions[studentKey]=next;
+      localStorage.setItem(getTodayContactStoreKey(),JSON.stringify(actions));
+    }
+
+    function markContactAndPaint(el,studentKey,action){
+      markContact(studentKey,action);
+      const card=el && el.closest ? el.closest('.student-contact-card') : null;
+      if(!card) return;
+      const contactValue=getContactAction(studentKey)||'none';
+      card.dataset.contact=contactValue;
+      const nameEl=card.querySelector('.student-contact-name');
+      const hintEl=card.querySelector('.student-contact-hint');
+      const pendingBadge=card.querySelector('.student-pending-badge');
+      if(pendingBadge){
+        pendingBadge.style.display=contactValue==='none'?'inline-flex':'none';
+      }
+      if(action==='whatsapp'){
+        const current=getContactAction(studentKey);
+        if(current==='both'){
+          if(nameEl) nameEl.style.color='#7e22ce';
+          if(hintEl){ hintEl.textContent='✓ تم التواصل واتساب + اتصال'; hintEl.style.color='#7e22ce'; }
+        }else{
+          if(nameEl) nameEl.style.color='#15803d';
+          if(hintEl){ hintEl.textContent='✓ تم التواصل واتساب'; hintEl.style.color='#15803d'; }
+        }
+      }else if(action==='call'){
+        const current=getContactAction(studentKey);
+        if(current==='both'){
+          if(nameEl) nameEl.style.color='#7e22ce';
+          if(hintEl){ hintEl.textContent='✓ تم التواصل واتساب + اتصال'; hintEl.style.color='#7e22ce'; }
+        }else{
+          if(nameEl) nameEl.style.color='#1d4ed8';
+          if(hintEl){ hintEl.textContent='✓ تم التواصل اتصال'; hintEl.style.color='#1d4ed8'; }
+        }
+      }
+      refreshContactFilterUI();
+    }
+
+    let currentStudentFilter='all';
+    function setStudentFilter(filter){
+      currentStudentFilter=filter;
+      const cards=[...document.querySelectorAll('.student-contact-card')];
+      cards.forEach(card=>{
+        const c=card.dataset.contact||'none';
+        const shouldShow=
+          filter==='all' ||
+          (filter==='pending' && c==='none') ||
+          (filter==='done' && c!=='none');
+        card.style.display=shouldShow?'block':'none';
+      });
+      document.querySelectorAll('.student-filter-btn').forEach(btn=>{
+        const active=btn.dataset.filter===filter;
+        btn.style.setProperty('background',active?'#dbeafe':'#eef2f7','important');
+        btn.style.setProperty('color',active?'#1d4ed8':'#334155','important');
+        btn.style.setProperty('border-color',active?'#93c5fd':'#dbe3ee','important');
+      });
+      refreshContactFilterUI();
+    }
+
+    function refreshContactFilterUI(){
+      const cards=[...document.querySelectorAll('.student-contact-card')];
+      const total=cards.length;
+      const pending=cards.filter(c=>(c.dataset.contact||'none')==='none').length;
+      const done=total-pending;
+      const info=document.getElementById('studentFilterInfo');
+      if(info) info.textContent=`إجمالي: ${total} | بانتظار التواصل: ${pending} | تم التواصل: ${done}`;
+    }
+
+    window.addEventListener('beforeprint',()=>{
+      try{
+        if(typeof setStudentFilter==='function'){
+          setStudentFilter('all');
+        }
+      }catch(_){}
+    });
+
+    function parseClassForSort(className){
+      const raw=String(className||'').trim();
+      const match=raw.match(/^(.+?)\s*\/?\s*(\d+)$/);
+      if(match){
+        return {name:match[1].trim(), number:parseInt(match[2],10)};
+      }
+      return {name:raw, number:0};
+    }
+
+    function compareClasses(a,b){
+      const normalizeGradeName=(name)=>{
+        const n=String(name||'').trim().replace(/\s+/g,' ');
+        const aliases={
+          'الأول':'اول','الأولى':'اول','اولى':'اول',
+          'الثاني':'ثاني','الثانية':'ثاني',
+          'الثالث':'ثالث','الثالثة':'ثالث',
+          'الرابع':'رابع','الرابعة':'رابع',
+          'الخامس':'خامس','الخامسة':'خامس',
+          'السادس':'سادس','السادسة':'سادس',
+          'السابع':'سابع','السابعة':'سابع',
+          'الثامن':'ثامن','الثامنة':'ثامن',
+          'التاسع':'تاسع','التاسعة':'تاسع',
+          'العاشر':'عاشر','العاشرة':'عاشر',
+          'الحادي عشر':'حادي عشر',
+          'الحادية عشرة':'حادي عشر',
+          'الثاني عشر':'ثاني عشر',
+          'الثانية عشرة':'ثاني عشر'
+        };
+        return aliases[n]||n;
+      };
+      const gradeOrder={
+        'اول':1,'ثاني':2,'ثالث':3,'رابع':4,'خامس':5,'سادس':6,'سابع':7,'ثامن':8,'تاسع':9,'عاشر':10,'حادي عشر':11,'ثاني عشر':12
+      };
+      const ca=parseClassForSort(a);
+      const cb=parseClassForSort(b);
+      const na=normalizeGradeName(ca.name);
+      const nb=normalizeGradeName(cb.name);
+      const ga=gradeOrder[na]||999;
+      const gb=gradeOrder[nb]||999;
+      if(ga!==gb) return ga-gb;
+      if(na!==nb) return na.localeCompare(nb,'ar');
+      return ca.number-cb.number;
+    }
+
+    async function getAttendanceData(forceRefresh=false){
+      const now=Date.now();
+      if(!forceRefresh && fastCache.attendance.data && (now-fastCache.attendance.ts)<FAST_CACHE_MS){
+        return fastCache.attendance.data;
+      }
+      const data=await (await fetch(API,{cache:'no-store'})).json();
+      fastCache.attendance={ts:now,data};
+      return data;
+    }
+
+    async function getStudentsData(){
+      if(Array.isArray(S) && S.length) return S;
+      const d=await (await fetch(API+'?type=students',{cache:'no-store'})).json();
+      S=d.data||d||[];
+      return S;
+    }
+    
+    async function abs(forceRefresh=false){
+      setProgress(0,'جاري جلب البيانات');
+      const requestId=++absRequestId;
+      r.innerHTML='<div style="text-align:center;padding:30px;">جاري تحميل البيانات...</div>';
+      try{
+        const attendance=await getAttendanceData(forceRefresh);
+        setProgress(35,'جاري جلب البيانات');
+        const studentsData=await getStudentsData();
+        setProgress(60,'جاري تجهيز البيانات');
+        if(requestId!==absRequestId) return;
+        
+        const {from:fromDate,to:toDate}=getSelectedDateRange();
+        const todayRows=attendance.filter(v=>{
+          if(!v.time) return false;
+          try{
+            const d=new Date(v.time).toISOString().slice(0,10);
+            return d>=fromDate && d<=toDate;
+          }catch(_){
+            return false;
+          }
+        });
+
+        const allClasses=[...new Set(
+          studentsData
+            .filter(s=>s.class&&String(s.class).trim())
+            .map(s=>String(s.class).trim())
+        )].sort(compareClasses);
+
+        const classTotals={};
+        allClasses.forEach(cls=>{
+          classTotals[cls]=studentsData.filter(s=>
+            s.class&&s.student&&String(s.class).trim()===cls
+          ).length;
+        });
+
+        const classSummaryRows=todayRows
+          .filter(v=>String(v.student||'').startsWith('الصف '))
+          .sort((a,b)=>new Date(a.time)-new Date(b.time));
+
+        const studentRowsToday=todayRows
+          .filter(v=>!String(v.student||'').startsWith('الصف '));
+
+        const sortedStudentRows=[...studentRowsToday].sort((a,b)=>new Date(a.time)-new Date(b.time));
+        const latestStudentRowByKey={};
+        sortedStudentRows.forEach(row=>{
+          const key=`${String(row.class||'').trim()}__${String(row.student||'').trim()}`;
+          latestStudentRowByKey[key]=row;
+        });
+        const latestStudentRows=Object.values(latestStudentRowByKey);
+
+        const classStudentStatuses={};
+        latestStudentRows.forEach(row=>{
+          const cls=String(row.class||'').trim();
+          if(!cls) return;
+          if(!classStudentStatuses[cls]) classStudentStatuses[cls]=[];
+          classStudentStatuses[cls].push(String(row.status||'').trim());
+        });
+
+        const latestSummaryByClass={};
+        classSummaryRows.forEach(row=>{
+          const cls=String(row.student).replace('الصف ','').trim();
+          latestSummaryByClass[cls]=row;
+        });
+
+        let fullAttendance=0;
+        let fullAbsence=0;
+        let partialAbsence=0;
+        let dropoutClasses=0;
+        let notRecorded=0;
+        const fullAttendanceClasses=[];
+        const fullAbsenceClasses=[];
+        const partialAbsenceClasses=[];
+        const dropoutClassesList=[];
+        const notRecordedClasses=[];
+
+        allClasses.forEach(cls=>{
+          const summary=latestSummaryByClass[cls];
+          const statusesInClass=classStudentStatuses[cls]||[];
+          const hasDropoutInStudents=statusesInClass.some(isDropoutStatus);
+          const absenceCountInStudents=statusesInClass.filter(s=>String(s).includes('غائبة')).length;
+          const total=classTotals[cls]||0;
+
+          if(hasDropoutInStudents){
+            dropoutClasses++;
+            const summaryText=summary?String(summary.status||'').trim():'تم رصد تسرب من سجل الطالبات';
+            dropoutClassesList.push(`${cls} (${summaryText})`);
+            return;
+          }
+
+          if(absenceCountInStudents>0){
+            const statusText=`${absenceCountInStudents} غائبة (من سجل الطالبات)`;
+            if(total>0 && absenceCountInStudents>=total){
+              fullAbsence++;
+              fullAbsenceClasses.push(`${cls} (${statusText})`);
+            }else{
+              partialAbsence++;
+              partialAbsenceClasses.push(`${cls} (${statusText})`);
+            }
+            return;
+          }
+
+          if(!summary){
+            notRecorded++;
+            notRecordedClasses.push(cls);
+            return;
+          }
+          const status=String(summary.status||'');
+          if(status==='حضور كامل'){
+            fullAttendance++;
+            fullAttendanceClasses.push(cls);
+            return;
+          }
+          if(isDropoutStatus(status)){
+            dropoutClasses++;
+            dropoutClassesList.push(`${cls} (${status})`);
+            return;
+          }
+          const count=parseInt((status.match(/\d+/)||['0'])[0],10);
+          if(total>0 && count>=total){
+            fullAbsence++;
+            fullAbsenceClasses.push(`${cls} (${status})`);
+          }else{
+            partialAbsence++;
+            partialAbsenceClasses.push(`${cls} (${status})`);
+          }
+        });
+
+        const studentAbsences=latestStudentRows
+          .filter(v=>String(v.status||'').includes('غائبة')||isDropoutStatus(v.status))
+          .sort((a,b)=>new Date(a.time)-new Date(b.time));
+        const uniqueStudentRows=studentAbsences;
+
+        const studentCards=uniqueStudentRows.map(o=>{
+          const cls=String(o.class||'').trim();
+          const name=String(o.student||'').trim();
+          const status=String(o.status||'').trim();
+          const isDropout=isDropoutStatus(status);
+          const cardBg='#ffffff';
+          const cardBorder='#dbe6f3';
+          const badgeBg='#f8fafc';
+          const badgeColor=isDropout?'#7e22ce':'#c2410c';
+          const studentKey=`${cls}__${name}`;
+          const actionTaken=getContactAction(studentKey);
+          const nameColor=actionTaken==='both'?'#7e22ce':actionTaken==='whatsapp'?'#15803d':actionTaken==='call'?'#1d4ed8':'#0f172a';
+          const actionHintText=actionTaken==='both'
+            ? '✓ تم التواصل واتساب + اتصال'
+            : actionTaken==='whatsapp'
+            ? '✓ تم التواصل واتساب'
+            : actionTaken==='call'
+            ? '✓ تم التواصل اتصال'
+            : '';
+          const actionHintColor=actionTaken==='both'?'#7e22ce':actionTaken==='whatsapp'?'#15803d':actionTaken==='call'?'#1d4ed8':'#94a3b8';
+          const matched=studentsData.find(s=>
+            String(s.class||'').trim()===cls &&
+            String(s.student||'').trim()===name
+          );
+          const phone=normalizePhone(matched?matched.phone:'');
+          const hasPhone=phone.length>=8;
+          const waText=encodeURIComponent(
+            `السلام عليكم ورحمة الله وبركاته\n\n`+
+            `نود إعلامكم أن ابنتكم الطالبة ${name} من الصف ${cls} غائبة اليوم بتاريخ `+
+            `${new Date().toLocaleDateString('ar-EG')}, ${new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}.\n\n`+
+            `نرجو منكم ارسال عذر للغياب مع الطالبه.\n`+
+            `و نود أيضًا أن ننوه لولي أمر الطالبه أن الغياب المتكرر يؤثر وبشكل كبير جدًا على المستوى التحصيلي للطالبه .، فالحضور هو سر التميز والنجاح والتقدم .\n\n`+
+            `شكراً لتعاونكم\n`+
+            `إدارة مدرسة جوهرة مسقط للتعليم الأساسي`
+          );
+          const contacts=hasPhone
+            ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                 <a target="_blank" rel="noopener noreferrer" href="https://wa.me/${phone}?text=${waText}" onclick='markContactAndPaint(this,${JSON.stringify(studentKey)},"whatsapp")' style="background:#e9f9ef;color:#166534;padding:7px 14px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;border:1px solid #bbf7d0;">واتساب</a>
+                 <a href="tel:+${phone}" onclick='markContactAndPaint(this,${JSON.stringify(studentKey)},"call")' style="background:#ecf3ff;color:#1d4ed8;padding:7px 14px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;border:1px solid #bfdbfe;">اتصال</a>
+               </div>`
+            : `<div style="font-size:12px;color:#64748b;margin-top:8px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;padding:6px 10px;">لا يوجد رقم ولي أمر</div>`;
+          const contactValue=actionTaken||'none';
+          return `<div class="student-contact-card" data-contact="${contactValue}" style="background:${cardBg};border:2px solid ${cardBorder};border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 2px 8px rgba(15,23,42,.04);">
+            <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">
+              <div class="student-contact-name" style="font-weight:800;color:${nameColor};font-size:15px;">${escapeHtml(name)}</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span class="student-pending-badge" style="display:${contactValue==='none'?'inline-flex':'none'};font-size:11px;color:#9a3412;background:#ffedd5;border:1px solid #fdba74;border-radius:999px;padding:2px 8px;">بانتظار التواصل</span>
+                <span class="student-contact-hint" style="font-size:12px;color:${actionHintColor};font-weight:700;">${actionHintText}</span>
+              </div>
+            </div>
+            <div style="font-size:12px;color:#64748b;margin-top:2px;">${escapeHtml(cls)}</div>
+            <div style="font-size:13px;color:#334155;margin-top:8px;background:${badgeBg};border:1px solid ${cardBorder};border-radius:10px;padding:6px 10px;">الحالة المسجلة: <span style="font-weight:800;color:${badgeColor};">${escapeHtml(status)}</span></div>
+            ${contacts}
+          </div>`;
+        });
+
+        const studentsByClass={};
+        studentCards.forEach((cardHtml,idx)=>{
+          const row=uniqueStudentRows[idx];
+          const cls=String(row.class||'').trim()||'بدون صف';
+          if(!studentsByClass[cls]) studentsByClass[cls]=[];
+          studentsByClass[cls].push({
+            name:String(row.student||'').trim(),
+            cardHtml,
+            studentKey:`${cls}__${String(row.student||'').trim()}`
+          });
+        });
+
+        const classHeaderThemes=[
+          {bg:'linear-gradient(135deg,#eef6ff,#e0ecff)',border:'#93c5fd',accent:'#2563eb',pill:'#dbeafe'},
+          {bg:'linear-gradient(135deg,#ecfdf5,#dcfce7)',border:'#86efac',accent:'#15803d',pill:'#dcfce7'},
+          {bg:'linear-gradient(135deg,#fff7ed,#ffedd5)',border:'#fdba74',accent:'#c2410c',pill:'#ffedd5'},
+          {bg:'linear-gradient(135deg,#faf5ff,#f3e8ff)',border:'#d8b4fe',accent:'#7e22ce',pill:'#f3e8ff'},
+          {bg:'linear-gradient(135deg,#f0f9ff,#e0f2fe)',border:'#7dd3fc',accent:'#0369a1',pill:'#e0f2fe'}
+        ];
+
+        const studentSectionsHtml=Object.keys(studentsByClass)
+          .sort(compareClasses)
+          .map((cls,idx)=>{
+            const th=classHeaderThemes[idx%classHeaderThemes.length];
+            const classItems=studentsByClass[cls];
+            const pendingCount=classItems.filter(item=>!getContactAction(item.studentKey)).length;
+            const doneCount=classItems.length-pendingCount;
+            const studentsHtml=classItems
+              .sort((a,b)=>{
+                const ca=getContactAction(`${cls}__${a.name}`)?1:0;
+                const cb=getContactAction(`${cls}__${b.name}`)?1:0;
+                if(ca!==cb) return ca-cb; // غير المتواصل معهم أولاً
+                return a.name.localeCompare(b.name,'ar');
+              })
+              .map(item=>item.cardHtml)
+              .join('');
+            return `<div style="margin-bottom:12px;">
+              <div style="background:${th.bg};border:1px solid ${th.border};border-right:6px solid ${th.accent};border-radius:12px;padding:10px 12px;margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+                  <div style="font-weight:800;color:#0f172a;font-size:15px;">🏫 الصف: ${escapeHtml(cls)}</div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <span style="font-size:11px;color:#1e293b;background:#ffffff;border:1px solid ${th.border};border-radius:999px;padding:3px 8px;">👥 ${classItems.length}</span>
+                    <span style="font-size:11px;color:#9a3412;background:#fff7ed;border:1px solid #fdba74;border-radius:999px;padding:3px 8px;">⏳ ${pendingCount}</span>
+                    <span style="font-size:11px;color:#166534;background:#ecfdf5;border:1px solid #86efac;border-radius:999px;padding:3px 8px;">✅ ${doneCount}</span>
+                  </div>
+                </div>
+              </div>
+              ${studentsHtml}
+            </div>`;
+          }).join('');
+
+        const rangeLabel=fromDate===toDate?`📅 التاريخ: ${fromDate}`:`📅 الفترة: من ${fromDate} إلى ${toDate}`;
+        const statsHtml=`
+          <div style="margin-bottom:8px;font-size:13px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:8px 10px;">${rangeLabel}</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:15px;">
+            <div style="background:#eef6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#1d4ed8;">${allClasses.length}</div><div style="font-size:12px;color:#334155;">📚 إجمالي الصفوف</div></div>
+            <div style="background:#ecfdf5;border:1px solid #86efac;border-radius:12px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#15803d;">${fullAttendance}</div><div style="font-size:12px;color:#334155;">✅ حضور كامل</div></div>
+            <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:12px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#b91c1c;">${fullAbsence}</div><div style="font-size:12px;color:#334155;">🚫 غياب كامل</div></div>
+            <div style="background:#fff7ed;border:1px solid #fdba74;border-radius:12px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#c2410c;">${partialAbsence}</div><div style="font-size:12px;color:#334155;">⚠️ غياب جزئي</div></div>
+            <div style="background:#faf5ff;border:1px solid #d8b4fe;border-radius:12px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#7e22ce;">${dropoutClasses}</div><div style="font-size:12px;color:#334155;">🚨 صفوف بها تسرب</div></div>
+            <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:12px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#334155;">${notRecorded}</div><div style="font-size:12px;color:#334155;">📝 غير مسجلة</div></div>
+          </div>
+        `;
+
+        const renderClassSection=(title,colorBg,colorBorder,items)=>{
+          const content=items.length
+            ? `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;">${
+                items.map(item=>`<div style="background:#fff;border:1px solid ${colorBorder};border-radius:10px;padding:8px 10px;font-size:13px;color:#334155;">${escapeHtml(item)}</div>`).join('')
+              }</div>`
+            : `<div style="font-size:13px;color:#64748b;">لا توجد صفوف</div>`;
+          return `<div style="background:${colorBg};border:2px solid ${colorBorder};border-right:6px solid ${colorBorder};border-radius:12px;padding:12px;margin-bottom:10px;">
+            <div style="font-weight:800;margin-bottom:8px;color:#111827;font-size:14px;">${title} (${items.length})</div>
+            ${content}
+          </div>`;
+        };
+
+        const classesDetailsHtml=`
+          <div style="margin-bottom:15px;">
+            ${renderClassSection('✅ الصفوف بحضور كامل','#ecfdf5','#86efac',fullAttendanceClasses)}
+            ${renderClassSection('🚫 الصفوف بغياب كامل','#fef2f2','#fca5a5',fullAbsenceClasses)}
+            ${renderClassSection('⚠️ الصفوف بغياب جزئي','#fff7ed','#fdba74',partialAbsenceClasses)}
+            ${renderClassSection('🚨 الصفوف التي بها تسرب','#faf5ff','#d8b4fe',dropoutClassesList)}
+            ${renderClassSection('📝 الصفوف التي لم تدخل بياناتها','#f8fafc','#cbd5e1',notRecordedClasses)}
+          </div>
+        `;
+
+        const listTitle=uniqueStudentRows.length
+          ? `<h3 style="margin:0 0 10px 0;font-size:16px;color:#111827;">👩‍🎓 الطالبات الغائبات أو المتسربات (${uniqueStudentRows.length})</h3>`
+          : `<h3 style="margin:0 0 10px 0;font-size:16px;color:#111827;">🎉 لا توجد طالبات غائبات أو متسربات اليوم</h3>`;
+
+        const studentFilterBar=uniqueStudentRows.length?`
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
+            <button type="button" class="student-filter-btn" data-filter="all" onclick="setStudentFilter('all')" style="min-height:auto;padding:6px 12px;margin:0;background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;border-radius:999px;font-size:12px;">الكل</button>
+            <button type="button" class="student-filter-btn" data-filter="pending" onclick="setStudentFilter('pending')" style="min-height:auto;padding:6px 12px;margin:0;background:#eef2f7;color:#334155;border:1px solid #dbe3ee;border-radius:999px;font-size:12px;">بانتظار التواصل</button>
+            <button type="button" class="student-filter-btn" data-filter="done" onclick="setStudentFilter('done')" style="min-height:auto;padding:6px 12px;margin:0;background:#eef2f7;color:#334155;border:1px solid #dbe3ee;border-radius:999px;font-size:12px;">تم التواصل</button>
+            <span id="studentFilterInfo" style="font-size:12px;color:#64748b;margin-right:auto;"></span>
+          </div>
+        `:'';
+
+        const printStudents=(uniqueStudentRows||[])
+          .map(s=>{
+            const cls=String(s.class||'').trim();
+            const name=String(s.student||'').trim();
+            return {
+              className:cls,
+              name,
+              status:String(s.status||'').trim(),
+              contact:getContactAction(`${cls}__${name}`)||'none'
+            };
+          })
+          .sort((a,b)=>{
+            const c=compareClasses(a.className,b.className);
+            if(c!==0) return c;
+            return a.name.localeCompare(b.name,'ar');
+          });
+
+        latestPrintData={
+          rangeLabel,
+          totals:{
+            totalClasses:allClasses.length,
+            fullAttendance,
+            fullAbsence,
+            partialAbsence,
+            dropoutClasses,
+            notRecorded
+          },
+          classes:{
+            fullAttendanceClasses:[...fullAttendanceClasses],
+            fullAbsenceClasses:[...fullAbsenceClasses],
+            partialAbsenceClasses:[...partialAbsenceClasses],
+            dropoutClassesList:[...dropoutClassesList],
+            notRecordedClasses:[...notRecordedClasses]
+          },
+          students:printStudents
+        };
+
+        setProgress(92,'جاري عرض النتائج');
+        if(requestId!==absRequestId) return;
+        r.innerHTML=statsHtml+classesDetailsHtml+`<div style="background:#f5f8fc;border:1px solid #dbe6f3;border-radius:14px;padding:12px;">${listTitle}${studentFilterBar}${studentSectionsHtml||''}</div>`;
+        if(uniqueStudentRows.length){
+          setStudentFilter(currentStudentFilter||'all');
+        }
+        setProgress(100,'اكتمل الجلب');
+        setTimeout(hideProgress,260);
+      }catch(e){
+        if(requestId!==absRequestId) return;
+        hideProgress();
+        r.innerHTML='<div style="text-align:center;padding:30px;color:#b91c1c;">خطأ في تحميل البيانات</div>';
+      }
+    }
+  </script>
+ </body>
+</html>
