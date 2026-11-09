@@ -1,0 +1,18 @@
+project_id = "nabd-alnamariq"
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
+[auth]
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/auth/confirm"]
+enable_signup = false
+
+[auth.email.template.invite]
+subject = "دعوة إلى لوحة نبض النمارق"
+content_path = "./supabase/templates/invite.html"
+
+[auth.email.template.recovery]
+subject = "إعادة تعيين كلمة مرور نبض النمارق"
+content_path = "./supabase/templates/recovery.html"
